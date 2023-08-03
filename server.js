@@ -19,19 +19,31 @@ app.use('/user/', (req, res, next) => {
 
 // Rest of paths
 app.get(['/','/home'], (req, res) => {
-  res.render('index', { layout: false })
+  res.render('index')
 });
 
 app.get('/about', (req, res) => {
-  res.render('about', { layout: false })
+  res.render('about')
 });
 
 app.get('/hello/:name', (req, res) => {
-  res.render('Hello', { layout: false, name: req.params.name });
+  res.render('hello', { name: req.params.name });
+});
+
+app.get('/info', (req, res) => {
+  res.render('info');
+});
+
+app.get('/history', (req, res) => {
+  res.render('history');
+});
+
+app.get('/contact', (req, res) => {
+  res.render('contact');
 });
 
 app.use((req, res) => {
-  res.status(404).render('404', {layout: false});
+  res.status(404).render('404');
 });
 
 app.listen(8000, () => {
