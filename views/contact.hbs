@@ -6,7 +6,7 @@
   </head>
   <body>
     <h2>Contact me</h2>
-    <form action="/contact/send-message" method="POST">
+    <form action="/contact/send-message" method="POST" enctype="multipart/form-data">
       <label>
         Your name: <input type="text" name="author">
       </label>
@@ -16,6 +16,9 @@
       <label>
         Title: <input type="text" name="title">
       </label>
+       <label>
+        File: <input type="file" name="file">
+      </label>
       <label>
         Message: <textarea name="message"></textarea>
       </label>
@@ -23,9 +26,12 @@
     </form>
     {{#if isError}}
       <span style="color: red;">You can't leave empty!</span>
+      {{#if fileError}}
+        <span style="color: red;">Only .png, .jpg, .jpeg, or .gif files are allowed!</span>
+      {{/if}}
     {{/if}}
     {{#if isSent}}
-      <p style="color: green;">The message has been sent!</p>
+      <p style="color: green;">The message has been sent! File {{ fileName }} has been send!</p>
     {{/if}}
   </body>
 </html>

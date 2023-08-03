@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const hbs = require('express-handlebars');
-
+const multer = require('multer');
 
 const app = express();
 
@@ -20,11 +20,28 @@ app.use('/user/', (req, res, next) => {
   res.render('forbidden', { layout: false })
 });
 
-// x-www-form-urlencoded service
-app.use(express.urlencoded({ extended: false }));
+// form-data service with multer middleware for file filtering
+const fileFilter = (req, file, cb) => {
+  const allowedFileTypes = ['.png', '.jpg', '.jpeg', '.gif'];
+  const ext = path.extname(file.originalname);
+  if (allowedFileTypes.includes(ext.toLowerCase())) {
+    cb(null, true); // Accept the file
+  } else {
+    req.fileError = 'Only .png, .jpg, .jpeg, or .gif files are allowed.'; // Save the error message to req.fileError
+    cb(null, false); // Reject the file
+  }
+};
 
-// form-data service
-app.use(express.json());
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/uploads'); // Save the file to the "public/uploads" directory
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname); // Use the original filename
+  }
+});
+
+const upload = multer({ fileFilter });
 
 // Rest of paths
 app.get(['/','/home'], (req, res) => {
@@ -51,15 +68,19 @@ app.get('/hello/:name', (req, res) => {
   res.render('hello', { name: req.params.name });
 });
 
-app.post('/contact/send-message', (req, res) => {
+app.post('/contact/send-message', upload.single('file'),  (req, res) => {
 
   const { author, sender, title, message } = req.body;
 
-  if(author && sender && title && message) {
-    res.render('contact', { isSent: true });
+  if(author && sender && title && message && req.file) {
+    const fileName = req.file && req.file.originalname;
+
+    // If all fields are filled, display success message
+    res.render('contact', { isSent: true, fileName });
   }
   else {
-    res.render('contact', { isError: true });
+    // If any field is missing, display error message
+    res.render('contact', { isError: true, fileError: req.fileError  });
   }
 
 });
