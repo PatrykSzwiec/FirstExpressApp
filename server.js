@@ -29,10 +29,6 @@ app.get('/about', (req, res) => {
   res.show('about.html');
 });
 
-app.get('/forbidden', (req, res) => {
-  res.show('forbidden.html');
-});
-
 app.use((req, res) => {
   res.status(404).show('404.html');
 })
