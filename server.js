@@ -20,6 +20,12 @@ app.use('/user/', (req, res, next) => {
   res.render('forbidden', { layout: false })
 });
 
+// x-www-form-urlencoded service
+app.use(express.urlencoded({ extended: false }));
+
+// form-data service
+app.use(express.json());
+
 // Rest of paths
 app.get(['/','/home'], (req, res) => {
   res.render('index')
@@ -43,6 +49,10 @@ app.get('/contact', (req, res) => {
 
 app.get('/hello/:name', (req, res) => {
   res.render('hello', { name: req.params.name });
+});
+
+app.post('/contact/send-message', (req, res) => {
+  res.json(req.body);
 });
 
 app.use((req, res) => {
