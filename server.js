@@ -5,7 +5,10 @@ const hbs = require('express-handlebars');
 
 const app = express();
 
-app.engine('.hbs', hbs());
+app.engine('.hbs', hbs({ 
+  layoutsDir: path.join(__dirname, 'views/layouts'), // Specify the layout directory
+  defaultLayout: 'main' // Set 'main.hbs' as the default layout for all routes
+}));
 app.set('view engine', '.hbs');
 
 app.use(express.static(path.join(__dirname, '/public')));
@@ -23,11 +26,7 @@ app.get(['/','/home'], (req, res) => {
 });
 
 app.get('/about', (req, res) => {
-  res.render('about')
-});
-
-app.get('/hello/:name', (req, res) => {
-  res.render('hello', { name: req.params.name });
+  res.render('about', { layout: 'dark'})
 });
 
 app.get('/info', (req, res) => {
@@ -40,6 +39,10 @@ app.get('/history', (req, res) => {
 
 app.get('/contact', (req, res) => {
   res.render('contact');
+});
+
+app.get('/hello/:name', (req, res) => {
+  res.render('hello', { name: req.params.name });
 });
 
 app.use((req, res) => {
