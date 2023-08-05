@@ -5,7 +5,7 @@ const multer = require('multer');
 
 const app = express();
 
-app.engine('.hbs', hbs({ 
+app.engine('hbs', hbs({ 
   layoutsDir: path.join(__dirname, 'views/layouts'), // Specify the layout directory
   defaultLayout: 'main' // Set 'main.hbs' as the default layout for all routes
 }));
