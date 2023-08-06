@@ -13,8 +13,6 @@ app.set('view engine', '.hbs');
 
 app.use(express.static(path.join(__dirname, '/public')));
 
-app.use(express.static(path.join(__dirname, '/user')));
-
 // Custom Middleware for /user/ routes
 app.use('/user/', (req, res, next) => {
   res.render('forbidden', { layout: false })
